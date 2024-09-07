@@ -78,3 +78,38 @@ table td, tr {
 	margin-bottom: 20px;
 	box-shadow: 3px 3px 3px silver;
 }
+
+.task-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Ensure three columns */
+    gap: 10px;
+}
+
+.task-card {
+	margin: 10px;
+	padding: 10px;
+	background-color: #E7F8F1;
+	border: 1px solid #3CBC8D;
+	border-radius: 5px;
+	box-shadow: 2px 2px 2px silver;
+	display: grid;
+	grid-template-rows: auto;
+	gap: 5px;
+}
+
+#task_cards_container button {
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #3CBC8D;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Consolas", "Courier New";
+    display: block;
+    box-shadow: 2px 2px 2px silver;
+}
+
+#task_cards_container button:hover {
+    background-color: #2D8C68;
+}

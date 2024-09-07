@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="es">
 
 <head>
 
@@ -12,7 +12,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="style.css">
-	<title>Metoda Ścieżki Krytycznej</title>
+	<title>Método del Camino Crítico</title>
 </head>
 
 <body>
@@ -22,23 +22,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-	<header class="title">Metoda Ścieżki Krytycznej</header>
+	<header class="title">Método del Camino Crítico</header>
 	<div class="content" id="content">
 		<nav>
-			<span class="mmenu"><a class="link" href="index.html">nowa ścieżka</a></span>
+			<span class="mmenu"><a class="link" href="index.html">nuevo camino</a></span>
 		</nav>
 		<div style="text-align: center;">
 			<div class="box" id="ins">
-				Wprowadź ilość zadań: <input id="ilosc" name="ilosc" value=5 type="number" min="1" max="26"></input><br>
-				<button class="insert_data" onclick="this.parentNode.style.display = 'none';insert_data()">wprowadź dane</button>
-				<button class="random_data" onclick="this.parentNode.style.display = 'none';random();" ;>losuj dane</button>
+				Ingrese el número de tareas: <input id="num_tasks" name="num_tasks" value=5 type="number" min="1" max="26"></input><br>
+				<button class="insert_data" onclick="this.parentNode.style.display = 'none';insert_data()">ingresar datos</button>
+				<button class="random_data" onclick="this.parentNode.style.display = 'none';random();" ;>datos aleatorios</button>
 			</div>
 		</div>
-		<div id="wynik"></div>
+		<div id="result"></div>
 		<div id="canvas">
 			<div style="text-align: center;">
-				<canvas id="cpm">twoja przeglądarka nie obsługuje płótna (canvas error)</canvas>
+				<canvas id="cpm">tu navegador no soporta canvas (error de canvas)</canvas>
 			</div>
+		</div>
+		<div id="task_cards_container" style="display: none;">
+			<div id="task_cards" class="task-cards-grid"></div>
+			<button onclick="submitTaskData()">Enviar</button>
 		</div>
 	</div>
 	<script src="cpm.js"></script>
