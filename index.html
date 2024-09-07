@@ -25,7 +25,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<header class="title">Método del Camino Crítico</header>
 	<div class="content" id="content">
 		<nav>
-			<span class="mmenu"><a class="link" href="index.html">nuevo camino</a></span>
+			<span class="mmenu"><a class="link" href="#" onclick="resetForm()">New Path</a></span>
+			<span class="mmenu"><a class="link" href="#" onclick="backToInput()">Back to Input</a></span>
 		</nav>
 		<div style="text-align: center;">
 			<div class="box" id="ins">
@@ -46,6 +47,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		</div>
 	</div>
 	<script src="cpm.js"></script>
+	<script>
+		function backToInput() {
+			document.getElementById("result").style.display = 'none';
+			document.getElementById("canvas").style.display = 'none';
+			document.getElementById("task_cards_container").style.display = 'block';
+		}
+	</script>
 </body>
 
 </html>

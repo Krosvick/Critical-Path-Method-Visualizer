@@ -165,10 +165,10 @@ function algorithm() {
 		}
 		// ingresar datos
 		function insert_data() {
-			num_tasks = document.getElementById("num_tasks").value;
+			num_tasks = parseInt(document.getElementById("num_tasks").value);
 			if (num_tasks < 1) {
 				alert("¡Debes ingresar al menos una tarea!");
-				window.location.href = 'index.html';
+				return;
 			}
 			task_data = [];
 			for (var i = 0; i < num_tasks; i++) {
@@ -218,6 +218,7 @@ function algorithm() {
 					updateTaskTimes(index);
 				});
 			}
+			restoreTaskData();
 		}
 		// datos aleatorios
 		function random() {
@@ -423,4 +424,76 @@ function submitTaskData() {
     // Mostrar los resultados y el canvas
     document.getElementById("result").style.display = 'block';
     document.getElementById("canvas").style.display = 'block';
+
+    // Store the task data before hiding the input form
+    storeTaskData();
 }
+
+// Add this function to store task data
+function storeTaskData() {
+    let storedData = [];
+    for (let i = 0; i < num_tasks; i++) {
+        storedData.push({
+            taskLength: document.getElementById(`task_length_${i}`).value,
+            numPredecessors: document.getElementById(`num_predecessors_${i}`).value,
+            predecessors: Array.from(document.getElementById(`predecessors_${i}`).children).map(input => input.value)
+        });
+    }
+    localStorage.setItem('storedTaskData', JSON.stringify(storedData));
+}
+
+// Add this function to restore task data
+function restoreTaskData() {
+    const storedData = JSON.parse(localStorage.getItem('storedTaskData'));
+    if (storedData) {
+        num_tasks = storedData.length;
+        document.getElementById("num_tasks").value = num_tasks;
+        
+        // Call insert_data to create the task cards
+        insert_data();
+        
+        for (let i = 0; i < num_tasks; i++) {
+            document.getElementById(`task_length_${i}`).value = storedData[i].taskLength;
+            document.getElementById(`num_predecessors_${i}`).value = storedData[i].numPredecessors;
+            
+            const predecessorsDiv = document.getElementById(`predecessors_${i}`);
+            predecessorsDiv.innerHTML = '';
+            for (let j = 0; j < storedData[i].predecessors.length; j++) {
+                const predInput = document.createElement('input');
+                predInput.type = 'number';
+                predInput.min = '1';
+                predInput.max = num_tasks.toString();
+                predInput.value = storedData[i].predecessors[j];
+                predInput.addEventListener('change', function() {
+                    updateTaskTimes(i);
+                });
+                predecessorsDiv.appendChild(predInput);
+            }
+            
+            updateTaskTimes(i);
+        }
+        
+        document.getElementById("ins").style.display = 'none';
+        document.getElementById("task_cards_container").style.display = 'block';
+    }
+}
+
+// Add a new function to reset the form
+function resetForm() {
+    localStorage.removeItem('storedTaskData');
+    document.getElementById("num_tasks").value = 5; // Reset to default value
+    document.getElementById("ins").style.display = 'block';
+    document.getElementById("task_cards_container").style.display = 'none';
+    document.getElementById("result").style.display = 'none';
+    document.getElementById("canvas").style.display = 'none';
+}
+
+// Modify the window load event listener
+window.addEventListener('load', function() {
+    const storedData = JSON.parse(localStorage.getItem('storedTaskData'));
+    if (storedData) {
+        restoreTaskData();
+    } else {
+        resetForm();
+    }
+});
