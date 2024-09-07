@@ -348,8 +348,15 @@ function calculateEarliestTimes() {
 // Función para calcular los tiempos de inicio y fin más tardíos basados en las dependencias
 function calculateLatestTimes() {
     let maxFinish = Math.max(...task_data.map(task => task.earliest_finish));
+    
+    // Initialize latest_finish for all tasks to maxFinish
+    for (var i = 0; i < num_tasks; i++) {
+        task_data[i].latest_finish = maxFinish;
+    }
+
+    // Iterate backwards to calculate latest start and finish times
     for (var i = num_tasks - 1; i >= 0; i--) {
-        if (i === num_tasks - 1 || !hasSuccessors(task_data[i].id)) {
+        if (task_data[i].num_predecessors === 0 || !hasSuccessors(task_data[i].id)) {
             task_data[i].latest_finish = maxFinish;
         } else {
             let minStart = Infinity;
