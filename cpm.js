@@ -65,11 +65,20 @@ function algorithm() {
     var a = 0;
     for (var i = 0; i < num_tasks; i++) {
         if (task_data[i].total_float == 0) {
-            result2 += " " + task_data[i].id;
             critical_path[a] = task_data[i].id;
             a++;
         }
     }
+
+    // Sort the critical path based on earliest start times
+    critical_path.sort((a, b) => {
+        const taskA = task_data.find(task => task.id === a);
+        const taskB = task_data.find(task => task.id === b);
+        return taskA.earliest_start - taskB.earliest_start;
+    });
+
+    // Update result2 to reflect the sorted critical path
+    result2 = critical_path.join(" ");
 
     document.getElementById("result").innerHTML = `<div class="box">Resultados:<br><br>${result}<hr>
                                                     <center><font size=4>Camino Crítico: <b>${result2}</b></font>.</center></div>`;
