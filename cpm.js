@@ -81,7 +81,9 @@ function algorithm() {
     result2 = critical_path.join(" ");
 
     document.getElementById("result").innerHTML = `<div class="box">Resultados:<br><br>${result}<hr>
-                                                    <center><font size=4>Camino Crítico: <b>${result2}</b></font>.</center></div>`;
+                                                    <center><font size=4>Camino Crítico: <b>${result2}</b></font>.</center>
+                                                    <br>
+                                                    <button onclick="setTimeout(generatePDF, 100)">Generar PDF</button></div>`;
     document.getElementById("canvas").className += 'box';
     
     // Adjust canvas size
@@ -420,6 +422,82 @@ function drawLine(x, y, m, n, c) {
 	canvas.moveTo(x, y);
 	canvas.lineTo(m, n);
 	canvas.stroke();
+}
+
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(16);
+    doc.text("Resultados del Método de la Ruta Crítica", 20, 20);
+    
+    // Add task results
+    doc.setFontSize(12);
+    let yPosition = 40;
+    for (let i = 0; i < num_tasks; i++) {
+        doc.text(`Tarea ${task_data[i].id}:`, 20, yPosition);
+        yPosition += 10;
+        doc.text(`Duración: ${task_data[i].task_length}`, 30, yPosition);
+        yPosition += 10;
+        doc.text(`Predecesores: ${task_data[i].predecessor.join(", ")}`, 30, yPosition);
+        yPosition += 10;
+        doc.text(`Inicio Más Temprano: ${task_data[i].earliest_start}`, 30, yPosition);
+        yPosition += 10;
+        doc.text(`Fin Más Temprano: ${task_data[i].earliest_finish}`, 30, yPosition);
+        yPosition += 10;
+        doc.text(`Inicio Más Tardío: ${task_data[i].latest_start}`, 30, yPosition);
+        yPosition += 10;
+        doc.text(`Fin Más Tardío: ${task_data[i].latest_finish}`, 30, yPosition);
+        yPosition += 10;
+        doc.text(`Holgura Total: ${task_data[i].total_float}`, 30, yPosition);
+        yPosition += 20;
+
+        // Add a new page if we're running out of space
+        if (yPosition > 250) {
+            doc.addPage();
+            yPosition = 20;
+        }
+    }
+    
+    // Add critical path
+    doc.text(`Camino Crítico: ${critical_path.join(" -> ")}`, 20, yPosition);
+    yPosition += 20;
+
+    // Add graph
+    const canvas = document.getElementById('cpm');
+    const scaledCanvas = scaleCanvas(canvas, 0.80); // Increased scale to 75%
+    const imgData = scaledCanvas.toDataURL('image/jpeg', 0.9); // Increased quality to 90%
+    const imgProps = doc.getImageProperties(imgData);
+    const pdfWidth = doc.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    // Check if we need a new page for the graph
+    if (yPosition + pdfHeight > doc.internal.pageSize.getHeight()) {
+        doc.addPage();
+        yPosition = 20;
+    }
+
+    doc.addImage(imgData, 'JPEG', 10, yPosition, pdfWidth - 20, pdfHeight);
+    
+    // Save the PDF
+    doc.save("CPM_Results.pdf");
+}
+
+function scaleCanvas(canvas, scale) {
+    const scaledCanvas = document.createElement('canvas');
+    scaledCanvas.width = canvas.width * scale;
+    scaledCanvas.height = canvas.height * scale;
+    const ctx = scaledCanvas.getContext('2d');
+
+    // Fill the background with white
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, scaledCanvas.width, scaledCanvas.height);
+
+    // Draw the original canvas content onto the scaled canvas
+    ctx.drawImage(canvas, 0, 0, scaledCanvas.width, scaledCanvas.height);
+
+    return scaledCanvas;
 }
 
 delete Task;
